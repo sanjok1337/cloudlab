@@ -19,6 +19,16 @@ resource "helm_release" "nginx_ingress" {
   }
 
   set {
+    name  = "controller.service.annotations.service\\.beta\\.kubernetes\\.io/aws-load-balancer-scheme"
+    value = "internet-facing"
+  }
+
+  set {
+    name  = "controller.service.annotations.service\\.beta\\.kubernetes\\.io/aws-load-balancer-nlb-target-type"
+    value = "instance"
+  }
+
+  set {
     name  = "controller.service.annotations.service\\.beta\\.kubernetes\\.io/aws-load-balancer-cross-zone-load-balancing-enabled"
     value = "true"
   }
@@ -29,18 +39,13 @@ resource "helm_release" "nginx_ingress" {
   }
 
   set {
+    name  = "controller.service.externalTrafficPolicy"
+    value = "Cluster"
+  }
+
+  set {
     name  = "controller.metrics.enabled"
     value = "true"
-  }
-
-  set {
-    name  = "controller.podAnnotations.prometheus\\.io/scrape"
-    value = "true"
-  }
-
-  set {
-    name  = "controller.podAnnotations.prometheus\\.io/port"
-    value = "10254"
   }
 
   set {

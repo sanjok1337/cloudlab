@@ -279,7 +279,7 @@ resource "helm_release" "aws_load_balancer_controller" {
 
   set {
     name  = "vpcId"
-    value = module.vpc.vpc_id
+    value = "vpc-045abe4175f60560a"
   }
 
   depends_on = [

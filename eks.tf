@@ -1,12 +1,12 @@
 module "eks" {
   source  = "terraform-aws-modules/eks/aws"
-  version = "~> 19.0"
+  version = "~> 20.0"
 
   cluster_name    = var.cluster_name
   cluster_version = var.cluster_version
 
-  vpc_id                         = module.vpc.vpc_id
-  subnet_ids                     = module.vpc.private_subnets
+  vpc_id                         = "vpc-045abe4175f60560a"
+  subnet_ids                     = ["subnet-0ca3b7f2f0a48deba","subnet-034b2836c2e3fcb48"]
   cluster_endpoint_public_access = true
 
   # EKS Managed Node Group(s)
@@ -34,6 +34,15 @@ module "eks" {
         Environment = var.environment
       }
     }
+  }
+
+  # Надати доступ створювачу кластера
+  enable_cluster_creator_admin_permissions = true
+
+  # Видалити автоматичний тег кластера з node security group
+  # щоб уникнути конфлікту з AWS Load Balancer Controller
+  node_security_group_tags = {
+    "kubernetes.io/cluster/${var.cluster_name}" = null
   }
 
   tags = {
