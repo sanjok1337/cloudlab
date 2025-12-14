@@ -19,8 +19,6 @@ module "eks" {
 
   eks_managed_node_groups = {
     main = {
-      name = "${var.cluster_name}-node-group"
-
       min_size     = var.node_min_size
       max_size     = var.node_max_size
       desired_size = var.node_desired_size
@@ -38,26 +36,8 @@ module "eks" {
     }
   }
 
-  # Cluster access entry
-  enable_cluster_creator_admin_permissions = true
-
   tags = {
     Environment = var.environment
     Terraform   = "true"
-  }
-}
-
-# OIDC Provider для EKS
-data "tls_certificate" "eks" {
-  url = module.eks.cluster_oidc_issuer_url
-}
-
-resource "aws_iam_openid_connect_provider" "eks" {
-  client_id_list  = ["sts.amazonaws.com"]
-  thumbprint_list = [data.tls_certificate.eks.certificates[0].sha1_fingerprint]
-  url             = module.eks.cluster_oidc_issuer_url
-
-  tags = {
-    Name = "${var.cluster_name}-eks-irsa"
   }
 }
